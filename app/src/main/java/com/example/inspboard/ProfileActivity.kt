@@ -3,8 +3,9 @@ package com.example.inspboard
 import android.os.Bundle
 import android.util.Log
 
-class MainActivity : BaseActivity(0) {
-    private val TAG = "MainActivity"
+
+class ProfileActivity : BaseActivity(1) {
+    private val TAG = "ProfileActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
