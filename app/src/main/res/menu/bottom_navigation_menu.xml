@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="feed"
+        android:icon="@drawable/ic_feed_selector"/>
+    <item
+        android:title="profile"
+        android:icon="@drawable/ic_profile_selector"/>
+    <item
+        android:title="logout"
+        android:icon="@drawable/ic_logout_selector"/>
+</menu>
