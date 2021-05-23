@@ -2,6 +2,7 @@ package com.example.inspboard
 
 import android.os.Bundle
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth;
 
 class MainActivity : BaseActivity(0) {
     private val TAG = "MainActivity"
@@ -12,5 +13,15 @@ class MainActivity : BaseActivity(0) {
 
         setUpBottomNavigation()
         Log.d(TAG, "onCreate")
+
+        val auth = FirebaseAuth.getInstance();
+        auth.signInWithEmailAndPassword("user@gmail.com", "123456")
+            .addOnCompleteListener{
+                if (it.isSuccessful) {
+                    Log.d(TAG, "sign in success")
+                } else {
+                    Log.d(TAG, "sign in err", it.exception)
+                }
+            }
     }
 }

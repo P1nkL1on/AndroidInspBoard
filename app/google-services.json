@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "703119989135",
+    "project_id": "inspboard-10fa0",
+    "storage_bucket": "inspboard-10fa0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703119989135:android:790eba620ffca1d810d3fa",
+        "android_client_info": {
+          "package_name": "com.example.inspboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "703119989135-emso6c9d9vb7iho3tqgf0hv9u7rlj33l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.inspboard",
+            "certificate_hash": "14913db92986966906e7ae453fd2998e16868b53"
+          }
+        },
+        {
+          "client_id": "703119989135-7dcpiosljv2c8ete26hus35vng937sp0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhDQjuOCiJZ2anftj3_0aPo-FdotpF0ZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703119989135-7dcpiosljv2c8ete26hus35vng937sp0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

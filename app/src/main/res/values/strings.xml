@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">InspBoard</string>
     <string name="app_full_name">Inspiration Board</string>
+    <string name="revert_changes">Revert Changes</string>
+    <string name="save_changes">Save Changes</string>
 </resources>

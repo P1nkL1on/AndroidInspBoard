@@ -5,4 +5,21 @@
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/blue_dark</item>
     </style>
+    <style name="text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+    <style name="text_title" parent="text">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30dp</item>
+    </style>
+    <style name="profile_text_param" parent="text">
+        <item name="android:textColor">@color/gray_dark</item>
+    </style>
+    <style name="profile_text_value" parent="text">
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

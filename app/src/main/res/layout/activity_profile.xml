@@ -8,11 +8,12 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_user"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
-            android:id="@+id/profile_image"
+            android:id="@+id/image_view_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -22,21 +23,20 @@
             android:layout_height="200dp"
             android:scaleType="fitXY"
             android:background="@drawable/background_gradient"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_image" />
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_profile" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="@id/profile_image">
+            app:layout_constraintBottom_toBottomOf="@id/image_view_profile">
             <TextView
+                android:id="@+id/text_view_username"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="user name"
-                android:textSize="30dp"
-                android:textAlignment="center"
-                android:textColor="@color/white"
+                android:text="\@username"
+                style="@style/text_title"
                 android:gravity="center"/>
             <ImageView
-                android:id="@+id/btn_edit"
+                android:id="@+id/image_view_edit"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="11dp"
@@ -46,13 +46,26 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-        android:id="@+id/bottom_navigation_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:elevation="4dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/layout_user"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/blue_dark"
-        app:menu="@menu/bottom_navigation_menu"/>
+        android:padding="20dp">
+        <TextView
+            style="@style/profile_text_param"
+            android:id="@+id/text_view_mail_label"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="mail"/>
+        <TextView
+            style="@style/profile_text_value"
+            android:id="@+id/text_view_mail_value"
+            app:layout_constraintBaseline_toBaselineOf="@id/text_view_mail_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="test@gmail.com"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/bottom_navigation"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
