@@ -18,7 +18,7 @@ class LogoutActivity : BaseActivity(2) {
         Log.d(TAG, "onCreate")
 
         mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut()
+        updateButtonsEnable()
 
         button_login.setOnClickListener {
             if (mAuth.currentUser == null) {
@@ -26,14 +26,19 @@ class LogoutActivity : BaseActivity(2) {
                 finish()
             }
         }
-
-//        mAuth.signInWithEmailAndPassword("user@gmail.com", "123456")
-//            .addOnCompleteListener{
-//                if (it.isSuccessful) {
-//                    Log.d(TAG, "sign in success")
-//                } else {
-//                    Log.d(TAG, "sign in err", it.exception)
-//                }
-//            }
+        button_logout.setOnClickListener {
+            if (mAuth.currentUser != null) {
+                mAuth.signOut()
+            }
+        }
+        mAuth.addAuthStateListener {
+            updateButtonsEnable()
+        }
     }
+
+    private fun updateButtonsEnable() =
+        (mAuth.currentUser == null).also {
+            button_login.isEnabled = it
+            button_logout.isEnabled = !it
+        }
 }

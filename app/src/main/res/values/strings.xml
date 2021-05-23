@@ -3,4 +3,6 @@
     <string name="app_full_name">Inspiration Board</string>
     <string name="revert_changes">Revert Changes</string>
     <string name="save_changes">Save Changes</string>
+    <string name="log_in">enter as member</string>
+    <string name="log_out">enter as guest</string>
 </resources>
