@@ -26,7 +26,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         val auth = FirebaseAuth.getInstance()
         mail_edit.setText(auth.currentUser!!.email)
-        database = FirebaseDatabase.getInstance().reference
+        database = getDatabaseReference()
         database.child("users").child(auth.currentUser!!.uid).addListenerForSingleValueEvent(
             ValueEventListenerAdapter {
                 Log.d(TAG, "user info request ok $it")

@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.example.inspboard.R
 import com.example.inspboard.models.User
@@ -15,8 +18,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_register_email.*
+import kotlinx.android.synthetic.main.fragment_register_email.edit_text_mail
 import kotlinx.android.synthetic.main.fragment_register_namepass.*
+import kotlinx.android.synthetic.main.fragment_register_namepass.edit_text_password
 
 class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFragment.Listener {
     private val TAG = "RegisterActivity"
@@ -29,7 +35,7 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
         setContentView(R.layout.activity_register)
 
         mAuth = FirebaseAuth.getInstance()
-        mDataBase = FirebaseDatabase.getInstance().reference
+        mDataBase = getDatabaseReference()
 
         if (savedInstanceState == null)
             supportFragmentManager.beginTransaction().add(R.id.frame_layout, EmailFragment())
@@ -37,7 +43,7 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
     }
 
     override fun onNext(email: String) {
-        if (!email.isNotEmpty()) {
+        if (email.isEmpty()) {
             showToast("Please enter email")
             return
         }
@@ -48,11 +54,11 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
     }
 
     override fun onRegister(name: String, password: String) {
-        if (!name.isNotEmpty() || !password.isNotEmpty()) {
+        if (name.isEmpty() || !password.isEmpty()) {
             showToast("Please enter name and password")
             return
         }
-        if (!mEmail.isNotEmpty()) {
+        if (mEmail.isEmpty()) {
             Log.e(TAG, "onRegister: mail is empty!", )
             showToast("Please enter mail")
             supportFragmentManager.popBackStack()
@@ -124,6 +130,22 @@ class NamePassFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        edit_text_name.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(s: Editable?) {
+                val name = edit_text_name.text.toString()
+                if (name.isEmpty()) {
+                    button_register.text = "continue"
+                } else {
+                    val nameContinue = toName(name)
+                    button_register.text = "continue as $nameContinue"
+                }
+            }
+        })
 
         button_register.setOnClickListener {
             val name = edit_text_name.text.toString()
