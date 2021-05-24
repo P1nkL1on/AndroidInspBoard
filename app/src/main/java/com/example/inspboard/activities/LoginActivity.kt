@@ -24,25 +24,11 @@ class LoginActivity : AppCompatActivity(), TextWatcher, View.OnClickListener {
         button_login.isEnabled = false
         edit_text_mail.addTextChangedListener(this)
         edit_text_password.addTextChangedListener(this)
-        button_login.setOnClickListener(this)
 
         mAuth = FirebaseAuth.getInstance()
-    }
 
-    override fun onClick(v: View) {
-        val email = edit_text_mail.text.toString()
-        val password = edit_text_password.text.toString()
-        if (!isMailAndPasswordOk(email, password)) {
-            showToast( "Please enter email and password")
-            return
-        }
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
-            if (!it.isSuccessful) {
-                return@addOnCompleteListener
-            }
-            startActivity(Intent(this, LogoutActivity::class.java))
-            finish()
-        }
+        button_login.setOnClickListener(this)
+        text_view_sign_up.setOnClickListener(this)
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -59,4 +45,28 @@ class LoginActivity : AppCompatActivity(), TextWatcher, View.OnClickListener {
 
     private fun isMailAndPasswordOk(mail: String, password: String) =
         mail.isNotEmpty() && password.isNotEmpty()
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.button_login -> {
+                val email = edit_text_mail.text.toString()
+                val password = edit_text_password.text.toString()
+                if (!isMailAndPasswordOk(email, password)) {
+                    showToast( "Please enter email and password")
+                    return
+                }
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
+                    if (!it.isSuccessful) {
+                        showToast("Incorrect mail or password!")
+                        return@addOnCompleteListener
+                    }
+                    startActivity(Intent(this, LogoutActivity::class.java))
+                    finish()
+                }
+            }
+            R.id.text_view_sign_up -> {
+                startActivity(Intent(this, RegisterActivity::class.java))
+            }
+        }
+    }
 }
