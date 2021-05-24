@@ -1,8 +1,9 @@
-package com.example.inspboard
+package com.example.inspboard.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.example.inspboard.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_logout.*
 

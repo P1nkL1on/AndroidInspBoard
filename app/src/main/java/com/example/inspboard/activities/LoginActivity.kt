@@ -1,4 +1,4 @@
-package com.example.inspboard
+package com.example.inspboard.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.inspboard.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -32,8 +33,7 @@ class LoginActivity : AppCompatActivity(), TextWatcher, View.OnClickListener {
         val email = edit_text_mail.text.toString()
         val password = edit_text_password.text.toString()
         if (!isMailAndPasswordOk(email, password)) {
-            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT)
-                .show()
+            showToast( "Please enter email and password")
             return
         }
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener{

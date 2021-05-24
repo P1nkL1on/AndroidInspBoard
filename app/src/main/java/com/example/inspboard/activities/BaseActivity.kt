@@ -1,8 +1,9 @@
-package com.example.inspboard
+package com.example.inspboard.activities
 
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.inspboard.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 
 abstract class BaseActivity(val menuItemNumber:Int) : AppCompatActivity() {
