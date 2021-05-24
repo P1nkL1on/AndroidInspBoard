@@ -47,14 +47,26 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             showToast("Please enter email")
             return
         }
-        mEmail = email
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, NamePassFragment())
-            .addToBackStack(null)
-            .commit()
+        mAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener {
+            if (!it.isSuccessful) {
+                showToast(it.exception!!.message!!)
+                return@addOnCompleteListener
+            } else if (it.result!!.signInMethods?.isEmpty() == false) {
+                showToast("This email already exists")
+                return@addOnCompleteListener
+            } else {
+                mEmail = email
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_layout, NamePassFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
     }
 
     override fun onRegister(name: String, password: String) {
-        if (name.isEmpty() || !password.isEmpty()) {
+        if (name.isEmpty() || password.isEmpty()) {
             showToast("Please enter name and password")
             return
         }
@@ -105,7 +117,7 @@ class EmailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        enableButtonIfAllTextsNonEmpty(button_next, edit_text_mail)
         button_next.setOnClickListener {
             val email = edit_text_mail.text.toString()
             mListener.onNext(email)
@@ -130,7 +142,7 @@ class NamePassFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        enableButtonIfAllTextsNonEmpty(button_register, edit_text_name, edit_text_password)
         edit_text_name.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }

@@ -12,7 +12,7 @@ import com.example.inspboard.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : AppCompatActivity(), TextWatcher, View.OnClickListener {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private val TAG = "LoginActivity"
     private lateinit var mAuth : FirebaseAuth
 
@@ -21,26 +21,11 @@ class LoginActivity : AppCompatActivity(), TextWatcher, View.OnClickListener {
         setContentView(R.layout.activity_login)
         Log.d(TAG, "onCreate")
 
-        button_login.isEnabled = false
-        edit_text_mail.addTextChangedListener(this)
-        edit_text_password.addTextChangedListener(this)
-
+        enableButtonIfAllTextsNonEmpty(button_login, edit_text_mail, edit_text_password)
         mAuth = FirebaseAuth.getInstance()
 
         button_login.setOnClickListener(this)
         text_view_sign_up.setOnClickListener(this)
-    }
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-    }
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-    }
-
-    override fun afterTextChanged(s: Editable?) {
-        button_login.isEnabled = isMailAndPasswordOk(
-            edit_text_mail.text.toString(),
-            edit_text_password.text.toString())
     }
 
     private fun isMailAndPasswordOk(mail: String, password: String) =
