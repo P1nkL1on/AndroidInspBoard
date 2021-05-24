@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.example.inspboard.R
 import com.example.inspboard.models.User
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -47,22 +48,13 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             showToast("Please enter email")
             return
         }
-        mAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                showToast(it.exception!!.message!!)
-                return@addOnCompleteListener
-            } else if (it.result!!.signInMethods?.isEmpty() == false) {
-                showToast("This email already exists")
-                return@addOnCompleteListener
-            } else {
-                mEmail = email
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, NamePassFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
+        mAuth.fetchSignInMethodsForEmail(email) {
+            mEmail = email
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, NamePassFragment())
+                .addToBackStack(null)
+                .commit()
         }
-
     }
 
     override fun onRegister(name: String, password: String) {
@@ -75,22 +67,49 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             showToast("Please enter mail")
             supportFragmentManager.popBackStack()
         }
+        mAuth.createUserWithEmailAndPassword(mEmail, password) {
+            val user = User(name)
+            mDataBase.createUser(it.user!!.uid, user) {
+                showToast("Registered successfully!")
+                startFeedActivity()
+            }
+        }
 
-        val email = mEmail
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                unknownRegisterError("Can't register user with such credentials", task)
+    }
+
+    private fun FirebaseAuth.fetchSignInMethodsForEmail(email: String, onSuccess: () -> Unit) {
+        mAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener {
+            if (!it.isSuccessful) {
+                showToast(it.exception!!.message!!)
+                return@addOnCompleteListener
+            } else if (it.result!!.signInMethods?.isEmpty() == false) {
+                showToast("This email already exists")
+                return@addOnCompleteListener
+            } else {
+                onSuccess()
+            }
+        }
+    }
+
+    private fun FirebaseAuth.createUserWithEmailAndPassword(email: String, password: String, onSuccess: (AuthResult) -> Unit) {
+        createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            if (!it.isSuccessful) {
+                unknownRegisterError("Can't register user with such credentials", it)
                 return@addOnCompleteListener
             }
-            val user = User(name)
-            mDataBase.child("users").child(task.result!!.user!!.uid).setValue(user).addOnCompleteListener {
+            onSuccess(it.result!!)
+        }
+    }
+
+    private fun DatabaseReference.createUser(uid: String, user: User, onSuccess: () -> Unit) {
+        child("users")
+            .child(uid).setValue(user)
+            .addOnCompleteListener {
                 if (!it.isSuccessful) {
                     unknownRegisterError("Can't add user to database", it)
                     return@addOnCompleteListener
                 }
-                showToast("Registered successfully!")
-                startFeedActivity()
-            }
+                onSuccess()
         }
     }
 
@@ -105,69 +124,5 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
     }
 }
 
-class EmailFragment : Fragment() {
-    private lateinit var mListener: Listener
-    interface Listener {
-        fun onNext(email: String)
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_register_email, container, false)
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        enableButtonIfAllTextsNonEmpty(button_next, edit_text_mail)
-        button_next.setOnClickListener {
-            val email = edit_text_mail.text.toString()
-            mListener.onNext(email)
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mListener = context as Listener
-    }
-}
-
-class NamePassFragment : Fragment() {
-    private lateinit var mListener : Listener
-    interface Listener {
-        fun onRegister(name: String, password: String)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
-        return inflater.inflate(R.layout.fragment_register_namepass, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        enableButtonIfAllTextsNonEmpty(button_register, edit_text_name, edit_text_password)
-        edit_text_name.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-            override fun afterTextChanged(s: Editable?) {
-                val name = edit_text_name.text.toString()
-                if (name.isEmpty()) {
-                    button_register.text = "continue"
-                } else {
-                    val nameContinue = toName(name)
-                    button_register.text = "continue as $nameContinue"
-                }
-            }
-        })
-
-        button_register.setOnClickListener {
-            val name = edit_text_name.text.toString()
-            val password = edit_text_password.text.toString()
-            mListener.onRegister(name, password)
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mListener = context as Listener
-    }
-}

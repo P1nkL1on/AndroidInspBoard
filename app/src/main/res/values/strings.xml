@@ -6,4 +6,5 @@
     <string name="log_in">enter as member</string>
     <string name="log_out">enter as guest</string>
     <string name="firebase_database_url">https://inspboard-10fa0-default-rtdb.europe-west1.firebasedatabase.app/</string>
+    <string name="enter_password">Please enter password</string>
 </resources>
