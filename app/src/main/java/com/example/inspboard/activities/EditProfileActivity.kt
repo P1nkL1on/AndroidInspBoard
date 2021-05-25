@@ -7,13 +7,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.inspboard.R
 import com.example.inspboard.models.User
+import com.example.inspboard.utils.Camera
+import com.example.inspboard.utils.FirebaseHelper
 import com.example.inspboard.views.PasswordDialog
 import com.google.firebase.auth.*
-import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import java.util.*
-
-
 
 
 class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
@@ -44,7 +42,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
         mail_edit.setText(mOldEmail)
 
         mFirebaseHelper.getCurrentUserData { user ->
-            name_edit.setText(user.username, TextView.BufferType.EDITABLE)
+            name_edit.setText(user.username)
             image_view_avatar.setUserPhoto(user.photo)
         }
     }

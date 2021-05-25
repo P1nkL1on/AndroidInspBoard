@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.inspboard.R
 import com.example.inspboard.models.User
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.fragment_register_email.*
-import kotlinx.android.synthetic.main.fragment_register_namepass.*
+import com.example.inspboard.utils.FirebaseHelper
 
 class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFragment.Listener {
     private val TAG = "RegisterActivity"
