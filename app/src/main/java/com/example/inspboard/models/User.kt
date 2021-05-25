@@ -1,3 +1,3 @@
 package com.example.inspboard.models
 
-data class User(val username: String = "undefined")
+data class User(val username: String = "undefined", var photo: String? = null)

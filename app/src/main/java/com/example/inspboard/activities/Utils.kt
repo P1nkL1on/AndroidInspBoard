@@ -12,6 +12,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class ValueEventListenerAdapter(val handler: (DataSnapshot) -> Unit) : ValueEventListener {
     private val TAG = "ValueEventListenerAdapter"
@@ -46,6 +48,9 @@ fun Context.showToast(text: String, duration: Int = Toast.LENGTH_SHORT) {
 
 fun Context.getDatabaseReference() =
     FirebaseDatabase.getInstance(this.getString(R.string.firebase_database_url)).reference
+
+fun Context.getStorageReference(): StorageReference =
+    FirebaseStorage.getInstance(this.getString(R.string.firebase_storage_url)).reference
 
 fun toName(name: String) =
     name.toLowerCase().replace(' ', '_')
