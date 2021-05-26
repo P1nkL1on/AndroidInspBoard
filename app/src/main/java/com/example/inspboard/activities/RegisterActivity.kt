@@ -3,6 +3,7 @@ package com.example.inspboard.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import com.example.inspboard.R
 import com.example.inspboard.models.User
@@ -53,14 +54,14 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             val user = User(name)
             mFirebaseHelper.createUser(it.user!!.uid, user) {
                 showToast("Registered successfully!")
-                startFeedActivity()
+                startProfileActivity()
             }
         }
 
     }
 
-    private fun startFeedActivity() {
-        startActivity(Intent(this, FeedActivity::class.java))
+    private fun startProfileActivity() {
+        startActivity(Intent(this, ProfileActivity::class.java))
         finish()
     }
 }

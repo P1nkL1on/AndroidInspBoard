@@ -12,7 +12,7 @@ class MainActivity : BaseActivity(0) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setUpBottomNavigation()
+//        setUpBottomNavigation()
         Log.d(TAG, "onCreate")
     }
 }

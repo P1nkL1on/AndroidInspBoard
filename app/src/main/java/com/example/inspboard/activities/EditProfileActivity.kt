@@ -1,9 +1,9 @@
 package com.example.inspboard.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.inspboard.R
 import com.example.inspboard.models.User
@@ -17,13 +17,13 @@ import kotlinx.android.synthetic.main.activity_edit_profile.*
 class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
     private val TAG = "EditProfileActivity"
 
-    private lateinit var mOldEmail: String
-    private lateinit var mNewEmail: String
+    private lateinit var mOldUser: User
     private lateinit var mNewUser: User
 
     private lateinit var mCamera: Camera
     private lateinit var mFirebaseHelper: FirebaseHelper
 
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -37,12 +37,10 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
         button_ok.setOnClickListener { updateUser() }
         image_view_avatar.setOnClickListener { mCamera.editUserAvatar() }
 
-        val auth = FirebaseAuth.getInstance()
-        mOldEmail = auth.currentUser!!.email.toString()
-        mail_edit.setText(mOldEmail)
-
         mFirebaseHelper.getCurrentUserData { user ->
-            name_edit.setText(user.username)
+            mOldUser = user
+            name_edit.setText(user.name)
+            mail_edit.setText(user.mail)
             image_view_avatar.setUserPhoto(user.photo)
         }
     }
@@ -65,7 +63,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     private fun updateUserInDb() {
         val updatesMap = mutableMapOf<String, Any>()
-        updatesMap["username"] = mNewUser.username
+        updatesMap["username"] = mNewUser.name
         mFirebaseHelper.updateCurrentUserData(updatesMap) {
             showToast("User updated")
             finish()
@@ -73,23 +71,16 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
     }
 
     private fun updateUser() {
-        // todo: refactor later
-        mNewEmail = mail_edit.text.toString()
-        if (mNewEmail.isEmpty()) {
-            showToast("Please enter mail")
-            return
-        }
-        mNewUser = User(
-            username = name_edit.text.toString()
+        mNewUser = mOldUser.copy(
+            name = name_edit.text.toString(),
+            mail = mail_edit.text.toString(),
         )
-        val errString = isUserOk(mNewUser)
-        if (errString != null) {
-            showToast(errString)
+        val err = isUserOk(mNewUser)
+        if (err != null) {
+            showToast(err)
             return
         }
-        showToast("Updating user...")
-
-        if (mNewEmail == mOldEmail) {
+        if (mNewUser.mail == mOldUser.mail) {
             updateUserInDb()
         } else {
             PasswordDialog().show(supportFragmentManager, "password_dialog")
@@ -101,17 +92,17 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
             showToast("Password is empty")
             return
         }
-
-        val credential = EmailAuthProvider.getCredential(mOldEmail, password)
+        val credential = EmailAuthProvider.getCredential(mOldUser.mail, password)
         mFirebaseHelper.reauthenticate(credential) {
-            mFirebaseHelper.updateEmail(mNewEmail) {
+            mFirebaseHelper.updateEmail(mNewUser.mail) {
                 updateUserInDb()
             }
         }
     }
 
     private fun isUserOk(user: User): String? = when {
-        user.username.isEmpty() -> "Please enter name"
+        user.name.isEmpty() -> "Please enter name"
+        user.mail.isEmpty() -> "Please enter mail"
         else -> null
     }
 }

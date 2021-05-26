@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         showToast("Incorrect mail or password!")
                         return@addOnCompleteListener
                     }
-                    startActivity(Intent(this, LogoutActivity::class.java))
+                    startActivity(Intent(this, ProfileActivity::class.java))
                     finish()
                 }
             }

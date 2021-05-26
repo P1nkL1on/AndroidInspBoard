@@ -10,14 +10,11 @@ abstract class BaseActivity(val menuItemNumber:Int) : AppCompatActivity() {
     private val TAG = "BaseActivity"
 
     fun setUpBottomNavigation () {
-        bottom_navigation_view.menu.getItem(menuItemNumber).isChecked = true
-
         bottom_navigation_view.setOnNavigationItemSelectedListener {
             val nextActivity =
                     when (it.itemId) {
                         R.id.nav_item_feed -> FeedActivity::class.java
                         R.id.nav_item_profile -> ProfileActivity::class.java
-                        R.id.nav_item_logout -> LogoutActivity::class.java
                         else -> {
                             Log.e(TAG, "unknown id item clicked $it")
                             null
@@ -34,5 +31,10 @@ abstract class BaseActivity(val menuItemNumber:Int) : AppCompatActivity() {
                 false
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bottom_navigation_view.menu.getItem(menuItemNumber).isChecked = true
     }
 }

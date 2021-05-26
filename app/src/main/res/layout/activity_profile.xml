@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/test_profile_image" />
+            android:src="@drawable/avatar_default" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -28,6 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             app:layout_constraintBottom_toBottomOf="@id/image_view_profile">
+            <ImageView
+                android:id="@+id/image_view_leave"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_exit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
             <TextView
                 android:id="@+id/text_view_username"
                 android:layout_width="match_parent"

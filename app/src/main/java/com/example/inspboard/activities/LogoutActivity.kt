@@ -15,7 +15,7 @@ class LogoutActivity : BaseActivity(2) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logout)
 
-        setUpBottomNavigation()
+//        setUpBottomNavigation()
         Log.d(TAG, "onCreate")
 
         mAuth = FirebaseAuth.getInstance();

@@ -2,12 +2,14 @@ package com.example.inspboard.activities
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.example.inspboard.R
 import com.google.firebase.database.*
