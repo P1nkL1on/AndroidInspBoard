@@ -5,6 +5,7 @@ import android.net.Uri
 import com.example.inspboard.activities.getDatabaseReference
 import com.example.inspboard.activities.getStorageReference
 import com.example.inspboard.activities.showToast
+import com.example.inspboard.models.Post
 import com.example.inspboard.models.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
@@ -31,7 +32,7 @@ class FirebaseHelper(private val activity: Activity) {
         }
     }
 
-    private fun currentUser(): FirebaseUser = auth.currentUser!!
+    fun currentUser(): FirebaseUser = auth.currentUser!!
 
     fun updateCurrentUserPhoto(imageUrl: String, onSuccess: () -> Unit) {
         database.child("users/${currentUser().uid}/photo").setValue(imageUrl).addOnCompleteListener {
@@ -47,6 +48,9 @@ class FirebaseHelper(private val activity: Activity) {
 
     fun currentUserImages(): DatabaseReference =
         database.child("images/${currentUser().uid}")
+
+    fun currentUserPosts(): DatabaseReference =
+        database.child("posts/${currentUser().uid}")
 
     fun storeUserPhoto(uri: Uri, onSuccess: () -> Unit) {
         storageCurrentUserPhotos().putFile(uri).addOnCompleteListener {
@@ -102,7 +106,13 @@ class FirebaseHelper(private val activity: Activity) {
         }
     }
 
-    fun getCurrentUserData(onSuccess: (user: User) -> Unit) {
+    fun createPost(post: Post, onSuccess: () -> Unit) {
+        database.child("posts/${currentUser().uid}").push().setValue(post).addOnCompleteListener {
+            it.showErrorOrContinue("Can't add post to database", onSuccess)
+        }
+    }
+
+    fun currentUserData(onSuccess: (user: User) -> Unit) {
         database.child("users").child(currentUser().uid).addListenerForSingleValueEvent(
             ValueEventListenerAdapter {
                 val user = it.getValue(User::class.java)

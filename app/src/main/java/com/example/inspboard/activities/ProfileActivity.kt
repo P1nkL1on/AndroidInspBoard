@@ -62,7 +62,7 @@ class ProfileActivity : BaseActivity(1) {
 
     override fun onResume() {
         super.onResume()
-        mFirebase.getCurrentUserData { user ->
+        mFirebase.currentUserData { user ->
             text_view_username.text = user.name
             text_view_mail_value.text = user.mail
             image_view_profile.setUserPhoto(user.photo)

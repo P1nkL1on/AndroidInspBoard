@@ -37,7 +37,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
         button_ok.setOnClickListener { updateUser() }
         image_view_avatar.setOnClickListener { mCamera.takePicture() }
 
-        mFirebase.getCurrentUserData { user ->
+        mFirebase.currentUserData { user ->
             mOldUser = user
             name_edit.setText(user.name)
             mail_edit.setText(user.mail)
