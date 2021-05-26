@@ -31,7 +31,7 @@ class FeedActivity : BaseActivity(0), FeedAdapter.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
-        Log.d(TAG, "onCreate")
+        Log.d(TAG, "onCreate ")
         setUpBottomNavigation()
 
         mFirebase = FirebaseHelper(this)
@@ -69,7 +69,7 @@ class FeedActivity : BaseActivity(0), FeedAdapter.Listener {
             })
         }
         if (mLikeListeners[postId] == null) {
-            mLikeListeners += postId to createListener()
+            mLikeListeners = mLikeListeners + (postId to createListener())
         }
     }
 
@@ -115,7 +115,7 @@ class FeedAdapter(private val listener:Listener, private val posts: List<Post>)
             listener.loadLikes(post.id, position)
         }
     }
-    override fun getItemCount(): Int = posts.size;
+    override fun getItemCount(): Int = posts.size
 
     private fun TextView.setLinkableText(text: String) {
         val spannableString = SpannableString(text)
@@ -131,7 +131,7 @@ class FeedAdapter(private val listener:Listener, private val posts: List<Post>)
     }
 
     fun updatePostLikes(position: Int, postLikes: PostLikes) {
-        mPostLikes += (position to postLikes)
+        mPostLikes = mPostLikes + (position to postLikes)
         notifyItemChanged(position)
     }
 }
