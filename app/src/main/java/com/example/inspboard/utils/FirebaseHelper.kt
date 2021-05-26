@@ -31,8 +31,7 @@ class FirebaseHelper(private val activity: Activity) {
         }
     }
 
-    private fun currentUser(): FirebaseUser =
-        auth.currentUser!!
+    private fun currentUser(): FirebaseUser = auth.currentUser!!
 
     fun updateCurrentUserPhoto(imageUrl: String, onSuccess: () -> Unit) {
         database.child("users/${currentUser().uid}/photo").setValue(imageUrl).addOnCompleteListener {
@@ -43,14 +42,34 @@ class FirebaseHelper(private val activity: Activity) {
     private fun storageCurrentUserPhotos(): StorageReference =
         storage.child("users/${currentUser().uid}/photo")
 
-    fun storeUserImage(uri: Uri, onSuccess: () -> Unit) {
+    private fun storageCurrentUserImage(uri: Uri): StorageReference =
+        storage.child("users/${currentUser().uid}/images/${uri.lastPathSegment}")
+
+    fun currentUserImages(): DatabaseReference =
+        database.child("images/${currentUser().uid}")
+
+    fun storeUserPhoto(uri: Uri, onSuccess: () -> Unit) {
         storageCurrentUserPhotos().putFile(uri).addOnCompleteListener {
+            it.showErrorOrContinue("Can't store photo", onSuccess)
+        }
+    }
+
+    fun downloadStoredUserPhotoUrl(onSuccess: (String) -> Unit) {
+        storageCurrentUserPhotos().downloadUrl.addOnCompleteListener {
+            it.showErrorOrContinue("Can't get url of stored photo") {
+                onSuccess(it.result.toString())
+            }
+        }
+    }
+
+    fun storeUserImage(uri: Uri, onSuccess: () -> Unit) {
+        storageCurrentUserImage(uri).putFile(uri).addOnCompleteListener {
             it.showErrorOrContinue("Can't store image", onSuccess)
         }
     }
 
-    fun downloadStoredUserImageUrl(onSuccess: (String) -> Unit) {
-        storageCurrentUserPhotos().downloadUrl.addOnCompleteListener {
+    fun downloadStoredUserImageUrl(uri: Uri, onSuccess: (String) -> Unit) {
+        storageCurrentUserImage(uri).downloadUrl.addOnCompleteListener {
             it.showErrorOrContinue("Can't get url of stored image") {
                 onSuccess(it.result.toString())
             }
@@ -90,6 +109,12 @@ class FirebaseHelper(private val activity: Activity) {
                 onSuccess(user!!)
             }
         )
+    }
+
+    fun createImage(url: String, onSuccess: () -> Unit) {
+        database.child("images").child(currentUser().uid).push().setValue(url).addOnCompleteListener {
+            it.showErrorOrContinue("Can't save image url in database", onSuccess)
+        }
     }
 
     fun updateCurrentUserData(update: Map<String, Any>, onSuccess: () -> Unit) {

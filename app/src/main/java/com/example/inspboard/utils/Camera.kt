@@ -16,7 +16,7 @@ class Camera(private val activity: Activity) {
     var imageUri: Uri? = null
     private  var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
 
-    fun editUserAvatar() {
+    fun takePicture() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(activity.packageManager) == null) {
             activity.showToast("Can't get the camera")

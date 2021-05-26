@@ -3,7 +3,6 @@ package com.example.inspboard.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import com.example.inspboard.R
 import com.example.inspboard.models.User
@@ -12,13 +11,15 @@ import com.example.inspboard.utils.FirebaseHelper
 class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFragment.Listener {
     private val TAG = "RegisterActivity"
     private lateinit var mEmail: String
-    private lateinit var mFirebaseHelper: FirebaseHelper
+    private lateinit var mFirebase: FirebaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // todo: make buttons in layout connected to text
+        //  edit rather than bottom because opf scrolling in keyboard mode
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        mFirebaseHelper = FirebaseHelper(this)
+        mFirebase = FirebaseHelper(this)
 
         if (savedInstanceState == null)
             supportFragmentManager.beginTransaction()
@@ -31,7 +32,7 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             showToast("Please enter email")
             return
         }
-        mFirebaseHelper.verifyEmailIsUnique(email) {
+        mFirebase.verifyEmailIsUnique(email) {
             mEmail = email
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, NamePassFragment())
@@ -50,14 +51,17 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             showToast("Please enter mail")
             supportFragmentManager.popBackStack()
         }
-        mFirebaseHelper.createUserWithEmailAndPassword(mEmail, password) {
-            val user = User(name)
-            mFirebaseHelper.createUser(it.user!!.uid, user) {
+        mFirebase.createUserWithEmailAndPassword(mEmail, password) {
+            // todo: add name conversion
+            val user = User(
+                name = name,
+                mail = mEmail
+            )
+            mFirebase.createUser(it.user!!.uid, user) {
                 showToast("Registered successfully!")
                 startProfileActivity()
             }
         }
-
     }
 
     private fun startProfileActivity() {

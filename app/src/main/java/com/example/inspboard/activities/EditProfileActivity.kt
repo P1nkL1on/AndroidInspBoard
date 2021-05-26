@@ -21,7 +21,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
     private lateinit var mNewUser: User
 
     private lateinit var mCamera: Camera
-    private lateinit var mFirebaseHelper: FirebaseHelper
+    private lateinit var mFirebase: FirebaseHelper
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,14 +30,14 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
         Log.d(TAG, "onCreate")
 
         mCamera = Camera(this)
-        mFirebaseHelper = FirebaseHelper(this)
+        mFirebase = FirebaseHelper(this)
 
         enableButtonIfAllTextsNonEmpty(button_ok, mail_edit, name_edit)
         button_back.setOnClickListener { finish() }
         button_ok.setOnClickListener { updateUser() }
-        image_view_avatar.setOnClickListener { mCamera.editUserAvatar() }
+        image_view_avatar.setOnClickListener { mCamera.takePicture() }
 
-        mFirebaseHelper.getCurrentUserData { user ->
+        mFirebase.getCurrentUserData { user ->
             mOldUser = user
             name_edit.setText(user.name)
             mail_edit.setText(user.mail)
@@ -47,11 +47,15 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != mCamera.REQUEST_CODE || resultCode != RESULT_OK)
+        if (requestCode != mCamera.REQUEST_CODE)
             return
-        mFirebaseHelper.apply {
-            storeUserImage(mCamera.imageUri!!) {
-                downloadStoredUserImageUrl { imageUrl ->
+        if (resultCode != RESULT_OK) {
+            showToast("Something bad with camera")
+            return
+        }
+        mFirebase.apply {
+            storeUserPhoto(mCamera.imageUri!!) {
+                downloadStoredUserPhotoUrl { imageUrl ->
                     updateCurrentUserPhoto(imageUrl) {
                         image_view_avatar.setUserPhoto(imageUrl)
                         showToast("Image saved!")
@@ -63,8 +67,9 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     private fun updateUserInDb() {
         val updatesMap = mutableMapOf<String, Any>()
-        updatesMap["username"] = mNewUser.name
-        mFirebaseHelper.updateCurrentUserData(updatesMap) {
+        updatesMap["name"] = mNewUser.name
+        updatesMap["mail"] = mNewUser.mail
+        mFirebase.updateCurrentUserData(updatesMap) {
             showToast("User updated")
             finish()
         }
@@ -93,8 +98,8 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
             return
         }
         val credential = EmailAuthProvider.getCredential(mOldUser.mail, password)
-        mFirebaseHelper.reauthenticate(credential) {
-            mFirebaseHelper.updateEmail(mNewUser.mail) {
+        mFirebase.reauthenticate(credential) {
+            mFirebase.updateEmail(mNewUser.mail) {
                 updateUserInDb()
             }
         }

@@ -3,6 +3,7 @@ package com.example.inspboard.activities
 import android.os.Bundle
 import android.util.Log
 import com.example.inspboard.R
+import com.google.firebase.auth.FirebaseAuth
 
 
 class FeedActivity : BaseActivity(0) {
