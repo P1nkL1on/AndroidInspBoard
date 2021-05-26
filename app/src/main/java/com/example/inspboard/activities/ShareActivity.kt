@@ -53,5 +53,6 @@ class ShareActivity : AppCompatActivity() {
         uid = mFirebase.currentUser().uid,
         name = mUser.name,
         photo = mUser.photo,
-        image = imageUrl)
+        image = imageUrl,
+    )
 }

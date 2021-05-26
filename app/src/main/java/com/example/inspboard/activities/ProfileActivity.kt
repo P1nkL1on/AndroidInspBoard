@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.inspboard.R
 import com.example.inspboard.utils.Camera
 import com.example.inspboard.utils.FirebaseHelper
@@ -65,7 +64,7 @@ class ProfileActivity : BaseActivity(1) {
         mFirebase.currentUserData { user ->
             text_view_username.text = user.name
             text_view_mail_value.text = user.mail
-            image_view_profile.setUserPhoto(user.photo)
+            image_view_profile.loadImage(user.photo)
         }
     }
 }
@@ -83,10 +82,6 @@ class ImagesAdapter(private val images: List<String>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.image.loadImage(images[position])
-    }
-
-    private fun ImageView.loadImage(image: String) {
-        Glide.with(this).load(image).centerCrop().into(this)
     }
 }
 

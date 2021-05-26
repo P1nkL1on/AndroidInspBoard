@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.example.inspboard.R
+import com.example.inspboard.models.Post
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -45,10 +46,16 @@ fun Context.getStorageReference(): StorageReference =
 fun toName(name: String) =
     name.toLowerCase().replace(' ', '_')
 
-fun ImageView.setUserPhoto(imageUrl: String?) {
+fun ImageView.loadImage(imageUrl: String?) {
     if ((context as Activity).isDestroyed)
         return
     Glide.with(this).load(imageUrl)
         .fallback(R.drawable.avatar_default)
+        .centerCrop()
         .into(this)
 }
+
+fun DatabaseReference.setTrueOrRemove(value: Boolean) =
+    if (value) setValue(true) else removeValue()
+
+fun DataSnapshot.asPost(): Post? = getValue(Post::class.java)?.copy(id = key!!)

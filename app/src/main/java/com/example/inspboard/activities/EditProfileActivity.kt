@@ -41,7 +41,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
             mOldUser = user
             name_edit.setText(user.name)
             mail_edit.setText(user.mail)
-            image_view_avatar.setUserPhoto(user.photo)
+            image_view_avatar.loadImage(user.photo)
         }
     }
 
@@ -57,7 +57,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
             storeUserPhoto(mCamera.imageUri!!) {
                 downloadStoredUserPhotoUrl { imageUrl ->
                     updateCurrentUserPhoto(imageUrl) {
-                        image_view_avatar.setUserPhoto(imageUrl)
+                        image_view_avatar.loadImage(imageUrl)
                         showToast("Image saved!")
                     }
                 }
