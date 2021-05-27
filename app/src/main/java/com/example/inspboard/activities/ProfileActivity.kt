@@ -8,6 +8,7 @@ import com.example.inspboard.R
 import com.example.inspboard.models.Post
 import com.example.inspboard.models.PostLikes
 import com.example.inspboard.utils.*
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_profile.*
 
@@ -26,7 +27,6 @@ class ProfileActivity : BaseActivity(2), PostViewer {
 
         if (mFirebase.auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
-            finish()
             return
         }
 
@@ -52,6 +52,9 @@ class ProfileActivity : BaseActivity(2), PostViewer {
 
     override fun onResume() {
         super.onResume()
+        if (mFirebase.auth.currentUser == null) {
+            return
+        }
         mFirebase.currentUserData { user ->
             text_view_username.text = user.name
             text_view_mail_value.text = user.mail
@@ -79,6 +82,9 @@ class ProfileActivity : BaseActivity(2), PostViewer {
         val intent = Intent(this, PostActivity::class.java)
         intent.putPostAndLikes(post, likes)
         startActivity(intent)
+    }
+
+    override fun requestNext(postInd: Int, nPosts: Int, onSuccess: (List<Post>) -> Unit) {
     }
 }
 

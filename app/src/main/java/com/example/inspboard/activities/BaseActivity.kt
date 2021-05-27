@@ -27,6 +27,7 @@ abstract class BaseActivity(val menuItemNumber:Int) : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(intent)
                 overridePendingTransition(0, 0)
+                finish()
                 true
             } else {
                 false

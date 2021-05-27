@@ -45,7 +45,6 @@ class ShareActivity : BaseActivity(1) {
         if (requestCode != mCamera.REQUEST_CODE)
             return
         if (resultCode != RESULT_OK) {
-            finish()
             return
         }
         addPost(mCamera.imageUri!!)
@@ -57,7 +56,7 @@ class ShareActivity : BaseActivity(1) {
                 downloadStoredUserImageUrl(uri) { imageUrl ->
                     createImageIdDb(imageUrl) {
                         createPost(mkPost(imageUrl)) {
-                            finish()
+                            goWatchPosts()
                         }
                     }
                 }
@@ -71,7 +70,7 @@ class ShareActivity : BaseActivity(1) {
             val imageUrls = mkRandomPostImages(1000, 1000, nPosts)
             createImagesAnonIdDb(imageUrls) {
                 createPostsAnon(mkRandomPosts(imageUrls)) {
-                    finish()
+                    goWatchPosts()
                 }
             }
         }
@@ -107,5 +106,10 @@ class ShareActivity : BaseActivity(1) {
                 image = imageUrl
             )
         }
+    }
+
+    private fun goWatchPosts(){
+        startActivity(Intent(this, FeedActivity::class.java))
+        finish()
     }
 }

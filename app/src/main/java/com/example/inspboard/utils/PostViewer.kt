@@ -9,4 +9,5 @@ interface PostViewer {
     fun mkLikeCountValueListener(postId: String, onSuccess: (PostLikes) -> Unit): ValueEventListener
     fun loadLikes(postId: String, position: Int)
     fun showPostDetails(post: Post, likes: PostLikes)
+    fun requestNext(postInd: Int, nPosts: Int, onSuccess: (List<Post>) -> Unit)
 }

@@ -54,4 +54,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
+    override fun onBackPressed() {
+        startActivity(Intent(this, FeedActivity::class.java))
+        finish()
+    }
 }

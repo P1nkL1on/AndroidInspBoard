@@ -1,8 +1,10 @@
 package com.example.inspboard.activities
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.inspboard.R
 import com.example.inspboard.models.Post
@@ -11,8 +13,10 @@ import com.example.inspboard.utils.FeedAdapter
 import com.example.inspboard.utils.FirebaseHelper
 import com.example.inspboard.utils.PostViewer
 import com.example.inspboard.utils.ValueEventListenerAdapter
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_feed.*
+import java.lang.Integer.min
 
 class FeedActivity : BaseActivity(0), PostViewer {
     private val TAG = "FeedActivity"
@@ -31,33 +35,27 @@ class FeedActivity : BaseActivity(0), PostViewer {
 
         mFirebase = FirebaseHelper(this)
         isAnon = mFirebase.auth.currentUser == null
-        if (isAnon) {
-            initializeFeedForAnon()
-        } else {
-            initializeFeedForRegistred()
+
+        mAdapter = FeedAdapter(this)
+        recycler_view_feed.adapter = mAdapter
+        recycler_view_feed.layoutManager = LinearLayoutManager(this)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun requestNext(postInd: Int, nPosts: Int, onSuccess: (List<Post>) -> Unit) {
+        Log.d(TAG, "requestNext")
+        var ref: DatabaseReference = mFirebase.anonPosts()
+        if (!isAnon) {
+            ref = mFirebase.currentUserPosts()
+            Log.d(TAG, "requestNext: as anon $ref")
         }
-    }
-
-    private fun initializeFeedForAnon() {
-        mFirebase.anonPosts().addListenerForSingleValueEvent(
+        ref.addListenerForSingleValueEvent(
             ValueEventListenerAdapter { it ->
-                val posts = it.children.map { it.asPost()!! }
+                val allPosts = it.children.map { it.asPost()!! }
                     .sortedByDescending { it.timestampDate() }
-                mAdapter = FeedAdapter(this, posts)
-                recycler_view_feed.adapter = mAdapter
-                recycler_view_feed.layoutManager = LinearLayoutManager(this)
-            }
-        )
-    }
-
-    private fun initializeFeedForRegistred() {
-        mFirebase.currentUserPosts().addListenerForSingleValueEvent(
-            ValueEventListenerAdapter { it ->
-                val posts = it.children.map { it.asPost()!! }
-                    .sortedByDescending { it.timestampDate() }
-                mAdapter = FeedAdapter(this, posts)
-                recycler_view_feed.adapter = mAdapter
-                recycler_view_feed.layoutManager = LinearLayoutManager(this)
+                val page = allPosts.subList(postInd, min(allPosts.count() - 1, postInd + nPosts))
+                Log.d(TAG, "requestNext: succ posts $postInd..${postInd + page.count()}")
+                onSuccess(page)
             }
         )
     }

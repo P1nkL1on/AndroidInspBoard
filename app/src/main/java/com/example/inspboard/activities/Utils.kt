@@ -55,8 +55,9 @@ fun toName(name: String) =
     name.toLowerCase().replace(' ', '_')
 
 var sharedOptions: RequestOptions = RequestOptions()
-    .placeholder(ColorDrawable(Color.MAGENTA))
+    .placeholder(ColorDrawable(Color.BLACK))
     .fallback(R.drawable.avatar_default)
+    .error(ColorDrawable(Color.RED))
     .centerCrop()
 
 fun ImageView.ifNotDestroyed(block: () -> Unit) {
@@ -65,12 +66,13 @@ fun ImageView.ifNotDestroyed(block: () -> Unit) {
     block()
 }
 
-fun ImageView.loadImagePrepare(imageUrl: String?, width: Int, height: Int) =
-    ifNotDestroyed {
+fun Activity.prepareImageForLoading(imageUrl: String?, width: Int, height: Int) {
+    if (!isDestroyed) {
         Glide.with(this).load(imageUrl)
             .apply(sharedOptions)
             .submit(width, height)
     }
+}
 
 fun ImageView.loadImageFullSize(imageUrl: String?) =
     ifNotDestroyed {
