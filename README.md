@@ -19,6 +19,7 @@
 Лента и личный кабинет
 
 <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147295.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147303.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147307.png?raw=true" width="200">
+
 <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147315.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147320.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147324.png?raw=true" width="200">
 
 ## Использованные библиотеки и сервисы
