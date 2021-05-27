@@ -10,7 +10,7 @@ import com.example.inspboard.models.Post
 import com.example.inspboard.models.PostLikes
 import kotlinx.android.synthetic.main.post_item_in_feed.view.*
 
-class ImagesAdapter(private val listener: PostViewer, private val posts: List<Post>) :
+class   ImagesAdapter(private val listener: PostViewer, private val posts: List<Post>) :
     RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
 
     class ViewHolder(val image: ImageView) : RecyclerView.ViewHolder(image)

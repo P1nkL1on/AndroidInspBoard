@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:scrollbarFadeDuration="2500"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-
     <include layout="@layout/bottom_navigation"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
