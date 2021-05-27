@@ -52,9 +52,8 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
             supportFragmentManager.popBackStack()
         }
         mFirebase.createUserWithEmailAndPassword(mEmail, password) {
-            // todo: add name conversion
             val user = User(
-                name = name,
+                name = toName(name),
                 mail = mEmail
             )
             mFirebase.createUser(it.user!!.uid, user) {

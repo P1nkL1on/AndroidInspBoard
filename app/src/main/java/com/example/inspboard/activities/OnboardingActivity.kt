@@ -41,19 +41,19 @@ class OnboardingActivity : AppCompatActivity() {
         onboardingItemsAdapter = OnboardingItemsAdapter(
             listOf(
                 OnboardingItem(
-                    R.drawable.onboarding_item_image_1,
-                    "Title1",
-                    "Descr1"
+                    R.drawable.onb_bb,
+                    "Inspire Board App",
+                    "Sharing and finding visual inspirations is easy with Inspire Board compact app"
                 ),
                 OnboardingItem(
-                    R.drawable.onboarding_item_image_2,
-                    "Title2",
-                    "Descr3"
+                    R.drawable.onb_3,
+                    "Both Anonymous & Registered",
+                    "Using both modes you can easily browse without authentication yet find the articles you're looking for perfectly"
                 ),
                 OnboardingItem(
-                    R.drawable.onboarding_item_image_3,
-                    "Title2",
-                    "Descr3"
+                    R.drawable.onb_a,
+                    "Start Right Now",
+                    "Adding posts to your favorites will enrich your experience and bring you pleasure"
                 )
             )
         )
