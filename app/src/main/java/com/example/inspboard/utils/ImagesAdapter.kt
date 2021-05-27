@@ -6,12 +6,15 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inspboard.R
 import com.example.inspboard.activities.loadImage
+import com.example.inspboard.models.Post
+import com.example.inspboard.models.PostLikes
+import kotlinx.android.synthetic.main.post_item_in_feed.view.*
 
-class ImagesAdapter(private val images: List<String>) :
+class ImagesAdapter(private val listener: PostViewer, private val posts: List<Post>) :
     RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
     class ViewHolder(val image: ImageView) : RecyclerView.ViewHolder(image)
 
-    override fun getItemCount(): Int = images.size
+    override fun getItemCount(): Int = posts.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val image = LayoutInflater.from(parent.context)
@@ -20,6 +23,11 @@ class ImagesAdapter(private val images: List<String>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.image.loadImage(images[position])
+        val post = posts[position]
+
+        holder.image.apply {
+            loadImage(posts[position].image)
+            setOnClickListener { listener.showPostDetails(post, PostLikes(0, false)) }
+        }
     }
 }

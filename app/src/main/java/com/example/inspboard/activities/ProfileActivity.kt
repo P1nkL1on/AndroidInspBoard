@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.inspboard.R
-import com.example.inspboard.utils.Camera
-import com.example.inspboard.utils.FirebaseHelper
-import com.example.inspboard.utils.ImagesAdapter
-import com.example.inspboard.utils.ValueEventListenerAdapter
+import com.example.inspboard.models.Post
+import com.example.inspboard.models.PostLikes
+import com.example.inspboard.utils.*
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_profile.*
 
-class ProfileActivity : BaseActivity(2) {
+class ProfileActivity : BaseActivity(2), PostViewer {
     private val TAG = "ProfileActivity"
     private lateinit var mCamera: Camera
     private lateinit var mFirebase: FirebaseHelper
@@ -43,10 +43,10 @@ class ProfileActivity : BaseActivity(2) {
             startActivity(intent)
         }
         recycler_view_images.layoutManager = GridLayoutManager(this, 3)
-        mFirebase.currentUserImages().addValueEventListener(ValueEventListenerAdapter{ it ->
-            val images = it.children.map {it.getValue(String::class.java)!!}
-            // todo: its *12 is special
-            recycler_view_images.adapter = ImagesAdapter(images + images + images + images + images + images + images + images + images + images + images + images + images + images)
+        mFirebase.currentUserPosts().addValueEventListener(ValueEventListenerAdapter{ it ->
+            val posts = it.children.map { it.asPost()!! }
+                .sortedByDescending { it.timestampDate() }
+            recycler_view_images.adapter = ImagesAdapter(this, posts)
         })
     }
 
@@ -57,6 +57,28 @@ class ProfileActivity : BaseActivity(2) {
             text_view_mail_value.text = user.mail
             image_view_profile.loadImage(user.photo)
         }
+    }
+
+    override fun toggleLike(postId: String) {
+    }
+
+    override fun mkLikeCountValueListener(postId: String, onSuccess: (PostLikes) -> Unit): ValueEventListener {
+        val reference = mFirebase.database.child("likes/${postId}")
+        return reference.addValueEventListener(ValueEventListenerAdapter { it ->
+            val users = it.children.map { it.key }.toSet()
+            val personalLike = users.contains(mFirebase.currentUser().uid)
+            val postLikes = PostLikes(users.count(), personalLike)
+            onSuccess(postLikes)
+        })
+    }
+
+    override fun loadLikes(postId: String, position: Int) {
+    }
+
+    override fun showPostDetails(post: Post, likes: PostLikes) {
+        val intent = Intent(this, PostActivity::class.java)
+        intent.putPostAndLikes(post, likes)
+        startActivity(intent)
     }
 }
 
