@@ -23,7 +23,6 @@ class   ImagesAdapter(private val listener: PostViewer, private val posts: List<
         return ViewHolder(image as ImageView)
     }
 
-
     private val postGalleryDpi = 140
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = posts[position]

@@ -67,7 +67,7 @@ class ShareActivity : BaseActivity(1) {
     private fun addRandomPosts() {
         mFirebase.apply {
             val nPosts = 100
-            val imageUrls = mkRandomPostImages(1000, 1000, nPosts)
+            val imageUrls = mkRandomPostImages(400, 400, nPosts)
             createImagesAnonIdDb(imageUrls) {
                 createPostsAnon(mkRandomPosts(imageUrls)) {
                     goWatchPosts()

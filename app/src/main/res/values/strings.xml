@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">InspBoard</string>
-    <string name="revert_changes">Revert Changes</string>
     <string name="save_changes">Save Changes</string>
     <string name="firebase_database_url">https://inspboard-10fa0-default-rtdb.europe-west1.firebasedatabase.app/</string>
     <string name="firebase_storage_url">gs://inspboard-10fa0.appspot.com/</string>

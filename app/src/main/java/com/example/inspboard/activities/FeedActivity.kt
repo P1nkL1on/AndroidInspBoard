@@ -35,7 +35,9 @@ class FeedActivity : BaseActivity(0), PostViewer {
 
         mFirebase = FirebaseHelper(this)
         isAnon = mFirebase.auth.currentUser == null
-
+        mFirebase.auth.addAuthStateListener {
+            isAnon = it.currentUser == null
+        }
         mAdapter = FeedAdapter(this)
         recycler_view_feed.adapter = mAdapter
         recycler_view_feed.layoutManager = LinearLayoutManager(this)
