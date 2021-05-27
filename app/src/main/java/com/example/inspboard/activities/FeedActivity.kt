@@ -21,6 +21,7 @@ class FeedActivity : BaseActivity(0), PostViewer {
     private lateinit var mAdapter: FeedAdapter
     private var mLikeListeners: Map<String, ValueEventListener> = emptyMap()
     private lateinit var mPostDetailsId: String
+    private var isAnon: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +30,27 @@ class FeedActivity : BaseActivity(0), PostViewer {
         setUpBottomNavigation()
 
         mFirebase = FirebaseHelper(this)
-        if (mFirebase.auth.currentUser == null) {
-            // todo: code for anon
-            return
+        isAnon = mFirebase.auth.currentUser == null
+        if (isAnon) {
+            initializeFeedForAnon()
+        } else {
+            initializeFeedForRegistred()
         }
-        // code for authorized
+    }
+
+    private fun initializeFeedForAnon() {
+        mFirebase.anonPosts().addListenerForSingleValueEvent(
+            ValueEventListenerAdapter { it ->
+                val posts = it.children.map { it.asPost()!! }
+                    .sortedByDescending { it.timestampDate() }
+                mAdapter = FeedAdapter(this, posts)
+                recycler_view_feed.adapter = mAdapter
+                recycler_view_feed.layoutManager = LinearLayoutManager(this)
+            }
+        )
+    }
+
+    private fun initializeFeedForRegistred() {
         mFirebase.currentUserPosts().addListenerForSingleValueEvent(
             ValueEventListenerAdapter { it ->
                 val posts = it.children.map { it.asPost()!! }
@@ -46,6 +63,10 @@ class FeedActivity : BaseActivity(0), PostViewer {
     }
 
     override fun toggleLike(postId: String) {
+        if (isAnon) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            return
+        }
         val reference = mFirebase.database.child("likes/${postId}/${mFirebase.currentUser().uid}")
         reference.addListenerForSingleValueEvent(ValueEventListenerAdapter {
             reference.setTrueOrRemove(!it.exists())
@@ -56,9 +77,12 @@ class FeedActivity : BaseActivity(0), PostViewer {
         val reference = mFirebase.database.child("likes/${postId}")
         return reference.addValueEventListener(ValueEventListenerAdapter { it ->
             val users = it.children.map { it.key }.toSet()
+            if (isAnon) {
+                onSuccess(PostLikes(users.count(), false))
+                return@ValueEventListenerAdapter
+            }
             val personalLike = users.contains(mFirebase.currentUser().uid)
-            val postLikes = PostLikes(users.count(), personalLike)
-            onSuccess(postLikes)
+            onSuccess(PostLikes(users.count(), personalLike))
         })
     }
 

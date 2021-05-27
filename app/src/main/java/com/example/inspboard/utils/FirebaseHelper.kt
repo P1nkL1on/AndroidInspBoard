@@ -52,6 +52,9 @@ class FirebaseHelper(private val activity: Activity) {
     fun currentUserPosts(): DatabaseReference =
         database.child("posts/${currentUser().uid}")
 
+    fun anonPosts(): DatabaseReference =
+        database.child("posts/anon")
+
     fun storeUserPhoto(uri: Uri, onSuccess: () -> Unit) {
         storageCurrentUserPhotos().putFile(uri).addOnCompleteListener {
             it.showErrorOrContinue("Can't store photo", onSuccess)
@@ -112,6 +115,18 @@ class FirebaseHelper(private val activity: Activity) {
         }
     }
 
+    fun createPostsAnon(posts: List<Post>, onSuccess: () -> Unit) {
+        val ref = database.child("posts/anon")
+        var updates = emptyMap<String, Any>()
+        posts.map {
+            val key = ref.push().key
+            updates = updates + (key.toString() to it)
+        }
+        ref.updateChildren(updates).addOnCompleteListener {
+            it.showErrorOrContinue("Can't add posts to database", onSuccess)
+        }
+    }
+
     fun currentUserData(onSuccess: (user: User) -> Unit) {
         database.child("users").child(currentUser().uid).addListenerForSingleValueEvent(
             ValueEventListenerAdapter {
@@ -124,6 +139,18 @@ class FirebaseHelper(private val activity: Activity) {
     fun createImageIdDb(url: String, onSuccess: () -> Unit) {
         database.child("images").child(currentUser().uid).push().setValue(url).addOnCompleteListener {
             it.showErrorOrContinue("Can't save image url in database", onSuccess)
+        }
+    }
+
+    fun createImagesAnonIdDb(urls: List<String>, onSuccess: () -> Unit) {
+        val ref = database.child("images/anon")
+        var updates = emptyMap<String, Any>()
+        urls.map {
+            val key = ref.push().key
+            updates = updates + (key.toString() to it)
+        }
+        ref.updateChildren(updates).addOnCompleteListener {
+            it.showErrorOrContinue("Can't save images url in database", onSuccess)
         }
     }
 

@@ -55,7 +55,7 @@ class ProfileActivity : BaseActivity(2), PostViewer {
         mFirebase.currentUserData { user ->
             text_view_username.text = user.name
             text_view_mail_value.text = user.mail
-            image_view_profile.loadImage(user.photo)
+            image_view_profile.loadImageFullSize(user.photo)
         }
     }
 

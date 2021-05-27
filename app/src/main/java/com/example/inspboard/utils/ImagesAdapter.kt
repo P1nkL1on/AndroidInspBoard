@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.post_item_in_feed.view.*
 
 class ImagesAdapter(private val listener: PostViewer, private val posts: List<Post>) :
     RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
+
     class ViewHolder(val image: ImageView) : RecyclerView.ViewHolder(image)
 
     override fun getItemCount(): Int = posts.size
@@ -22,11 +23,13 @@ class ImagesAdapter(private val listener: PostViewer, private val posts: List<Po
         return ViewHolder(image as ImageView)
     }
 
+
+    private val postGalleryDpi = 140
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = posts[position]
 
         holder.image.apply {
-            loadImage(posts[position].image)
+            loadImage(posts[position].image, postGalleryDpi, postGalleryDpi)
             setOnClickListener { listener.showPostDetails(post, PostLikes(0, false)) }
         }
     }

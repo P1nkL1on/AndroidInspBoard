@@ -18,6 +18,8 @@ class FeedAdapter(private val listener: PostViewer, private val posts: List<Post
 
     private var mPostLikes: Map<Int, PostLikes> = emptyMap()
     private val defaultPostLikes: PostLikes = PostLikes(0, false)
+    private val avatarDpi = 50;
+    private val postDpi = 400;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,8 +32,8 @@ class FeedAdapter(private val listener: PostViewer, private val posts: List<Post
         val likes = mPostLikes[position] ?: defaultPostLikes
 
         with(holder.view) {
-            image_view_avatar.loadImage(post.photo)
-            image_view_image.loadImage(post.image)
+            image_view_avatar.loadImage(post.photo, avatarDpi, avatarDpi)
+            image_view_image.loadImage(post.image, postDpi, postDpi)
             image_view_image.setOnClickListener { listener.showPostDetails(post, likes) }
             text_view_name.setLinkableText(post.name)
             text_view_date.text = post.timestampDate().toString()

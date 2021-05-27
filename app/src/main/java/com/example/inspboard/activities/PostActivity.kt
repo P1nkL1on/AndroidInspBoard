@@ -16,6 +16,7 @@ class PostActivity() : AppCompatActivity() {
     private lateinit var mPostLikes: PostLikes
     private lateinit var mTimestamp: String
     private var mLikeWasToggled = false
+    private val avatarDpi = 50
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +60,8 @@ class PostActivity() : AppCompatActivity() {
     }
 
     private fun updateTextAndImages() {
-        image_view_avatar.loadImage(mPost.photo)
-        image_view_image.loadImage(mPost.image)
+        image_view_avatar.loadImage(mPost.photo, avatarDpi, avatarDpi)
+        image_view_image.loadImageFullSize(mPost.image)
         text_view_name.setLinkableText(mPost.name)
         text_view_date.text = mTimestamp
     }

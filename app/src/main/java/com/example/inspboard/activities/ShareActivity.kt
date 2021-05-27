@@ -11,6 +11,8 @@ import com.example.inspboard.models.User
 import com.example.inspboard.utils.Camera
 import com.example.inspboard.utils.FirebaseHelper
 import kotlinx.android.synthetic.main.activity_share.*
+import java.time.LocalDateTime
+import java.util.*
 
 class ShareActivity : BaseActivity(1) {
     private val TAG = "ShareActivity"
@@ -25,22 +27,17 @@ class ShareActivity : BaseActivity(1) {
         setUpBottomNavigation()
 
         mFirebase = FirebaseHelper(this)
-        mFirebase.currentUserData { mUser = it }
         mCamera = Camera(this)
 
-        button_post_from_camera.setOnClickListener { mCamera.takePicture() }
-        button_post_random.setOnClickListener { addRandomPosts() }
-    }
-
-    private fun addRandomPosts() {
-        mFirebase.apply {
-            val imageUrl = "https://picsum.photos/seed/picsum/1000/1000"
-            createImageIdDb(imageUrl) {
-                createPost(mkPost(imageUrl)) {
-                    finish()
-                }
-            }
+        if (mFirebase.auth.currentUser == null) {
+            button_post_from_camera.isEnabled = false
+            button_post_random.setOnClickListener { addRandomPosts() }
+        } else {
+            mFirebase.currentUserData { mUser = it }
+            button_post_from_camera.setOnClickListener { mCamera.takePicture() }
+            button_post_random.setOnClickListener { addRandomPosts() }
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -68,10 +65,47 @@ class ShareActivity : BaseActivity(1) {
         }
     }
 
+    private fun addRandomPosts() {
+        mFirebase.apply {
+            val nPosts = 100
+            val imageUrls = mkRandomPostImages(1000, 1000, nPosts)
+            createImagesAnonIdDb(imageUrls) {
+                createPostsAnon(mkRandomPosts(imageUrls)) {
+                    finish()
+                }
+            }
+        }
+    }
+
     private fun mkPost(imageUrl: String): Post = Post(
         uid = mFirebase.currentUser().uid,
         name = mUser.name,
         photo = mUser.photo,
         image = imageUrl,
     )
+
+    private fun randomString(length: Int) : String {
+        val allowedChars = ('a'..'z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
+    }
+    private fun mkRandomPostImages(width: Int, height: Int, count: Int): List<String> =
+        IntArray(count) { it }.map {
+            "https://picsum.photos/seed/${Date().time - it.toLong()}/$width/$height"
+        }
+
+    private fun mkRandomPosts(imageUrls: List<String>): List<Post> {
+        val count = imageUrls.count()
+        return IntArray(count) { it }.map {
+            val imageUrl = imageUrls.elementAt(it)
+            val photoUrl = "https://picsum.photos/seed/${Date().time - (it + count).toLong()}/50/50"
+            Post(
+                uid = "missing",
+                name = randomString(5) + '.' + randomString(10),
+                photo = photoUrl,
+                image = imageUrl
+            )
+        }
+    }
 }

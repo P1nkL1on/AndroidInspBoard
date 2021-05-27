@@ -22,6 +22,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     private lateinit var mCamera: Camera
     private lateinit var mFirebase: FirebaseHelper
+    private val avatarDpi = 200;
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
             mOldUser = user
             name_edit.setText(user.name)
             mail_edit.setText(user.mail)
-            image_view_avatar.loadImage(user.photo)
+            image_view_avatar.loadImage(user.photo, avatarDpi, avatarDpi)
         }
     }
 
@@ -57,7 +58,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
             storeUserPhoto(mCamera.imageUri!!) {
                 downloadStoredUserPhotoUrl { imageUrl ->
                     updateCurrentUserPhoto(imageUrl) {
-                        image_view_avatar.loadImage(imageUrl)
+                        image_view_avatar.loadImage(imageUrl, avatarDpi, avatarDpi)
                         showToast("Image saved!")
                     }
                 }

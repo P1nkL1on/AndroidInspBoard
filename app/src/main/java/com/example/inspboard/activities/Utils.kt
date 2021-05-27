@@ -3,14 +3,18 @@ package com.example.inspboard.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.media.Image
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.*
-import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
+import com.bumptech.glide.request.RequestOptions
 import com.example.inspboard.R
 import com.example.inspboard.models.Post
 import com.example.inspboard.models.PostLikes
@@ -18,9 +22,12 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
-fun areAllTextsNotEmpty(vararg  inputs: EditText) = inputs.all { it.text.isNotEmpty() }
+@GlideModule
+class CustomGlideModule : AppGlideModule()
 
-fun enableButtonIfAllTextsNonEmpty(btn: Button, vararg  inputs: EditText) {
+fun areAllTextsNotEmpty(vararg inputs: EditText) = inputs.all { it.text.isNotEmpty() }
+
+fun enableButtonIfAllTextsNonEmpty(btn: Button, vararg inputs: EditText) {
     val watcher = object: TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
@@ -47,14 +54,38 @@ fun Context.getStorageReference(): StorageReference =
 fun toName(name: String) =
     name.toLowerCase().replace(' ', '_')
 
-fun ImageView.loadImage(imageUrl: String?) {
+var sharedOptions: RequestOptions = RequestOptions()
+    .placeholder(ColorDrawable(Color.MAGENTA))
+    .fallback(R.drawable.avatar_default)
+    .centerCrop()
+
+fun ImageView.ifNotDestroyed(block: () -> Unit) {
     if ((context as Activity).isDestroyed)
         return
-    Glide.with(this).load(imageUrl)
-        .fallback(R.drawable.avatar_default)
-        .centerCrop()
-        .into(this)
+    block()
 }
+
+fun ImageView.loadImagePrepare(imageUrl: String?, width: Int, height: Int) =
+    ifNotDestroyed {
+        Glide.with(this).load(imageUrl)
+            .apply(sharedOptions)
+            .submit(width, height)
+    }
+
+fun ImageView.loadImageFullSize(imageUrl: String?) =
+    ifNotDestroyed {
+        Glide.with(this).load(imageUrl)
+            .apply(sharedOptions)
+            .into(this)
+    }
+
+fun ImageView.loadImage(imageUrl: String?, width: Int, height: Int) =
+    ifNotDestroyed {
+        Glide.with(this).load(imageUrl)
+            .apply(sharedOptions)
+            .override(width, height)
+            .into(this)
+    }
 
 fun DatabaseReference.setTrueOrRemove(value: Boolean) =
     if (value) setValue(true) else removeValue()
@@ -67,7 +98,8 @@ fun TextView.setLinkableText(text: String) {
         override fun onClick(widget: View) {
             widget.context.showToast("Username is clicked")
         }
-        override fun updateDrawState(ds: TextPaint) { }
+
+        override fun updateDrawState(ds: TextPaint) {}
     }, 0, spannableString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
     this.text = spannableString
