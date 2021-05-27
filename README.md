@@ -10,6 +10,17 @@
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/uZoVA13Y2os/0.jpg)](https://www.youtube.com/watch?v=uZoVA13Y2os)
 
+## Скриншоты приложения
+
+Онбординг
+
+<img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147285.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147287.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147289.png?raw=true" width="200">
+
+Лента и личный кабинет
+
+<img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147295.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147303.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147307.png?raw=true" width="200">
+<img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147315.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147320.png?raw=true" width="200"> <img src="https://github.com/P1nkL1on/AndroidInspBoard/blob/master/screenshots/Screenshot_1622147324.png?raw=true" width="200">
+
 ## Использованные библиотеки и сервисы
 
 * [firebase](https://console.firebase.google.com/) для бд и хранения картинок
