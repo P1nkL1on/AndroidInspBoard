@@ -1,0 +1,74 @@
+package com.example.inspboard.utils
+
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.inspboard.R
+import com.example.inspboard.activities.loadImage
+import com.example.inspboard.activities.showToast
+import com.example.inspboard.models.Post
+import com.example.inspboard.models.PostLikes
+import kotlinx.android.synthetic.main.post_item_in_feed.view.*
+
+class FeedAdapter(private val listener:Listener, private val posts: List<Post>)
+    : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
+
+    interface Listener {
+        fun toggleLike(postId: String)
+        fun loadLikes(postId: String, position: Int)
+    }
+
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+
+    private var mPostLikes: Map<Int, PostLikes> = emptyMap()
+    private val defaultPostLikes: PostLikes = PostLikes(0, false)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.post_item_in_feed, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val post = posts[position]
+        val likes = mPostLikes[position] ?: defaultPostLikes
+
+        with(holder.view) {
+            image_view_avatar.loadImage(post.photo)
+            image_view_image.loadImage(post.image)
+            text_view_name.setLinkableText(post.name)
+            text_view_date.text = post.timestampDate().toString()
+            text_view_likes.text = likes.likesCount.toString()
+            image_view_check.setOnClickListener { listener.toggleLike(post.id) }
+            image_view_check.setImageResource(if (likes.personalLike) R.drawable.ic_check_true else R.drawable.ic_check_false)
+            listener.loadLikes(post.id, position)
+        }
+    }
+
+    override fun getItemCount(): Int = posts.size
+
+    private fun TextView.setLinkableText(text: String) {
+        val spannableString = SpannableString(text)
+        spannableString.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                widget.context.showToast("Username is clicked")
+            }
+            override fun updateDrawState(ds: TextPaint) { }
+        }, 0, spannableString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        this.text = spannableString
+        this.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    fun updatePostLikes(position: Int, postLikes: PostLikes) {
+        mPostLikes = mPostLikes + (position to postLikes)
+        notifyItemChanged(position)
+    }
+}

@@ -5,12 +5,14 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.inspboard.R
 import com.example.inspboard.models.Post
 import com.example.inspboard.models.User
 import com.example.inspboard.utils.Camera
 import com.example.inspboard.utils.FirebaseHelper
+import kotlinx.android.synthetic.main.activity_share.*
 
-class ShareActivity : AppCompatActivity() {
+class ShareActivity : BaseActivity(1) {
     private val TAG = "ShareActivity"
     private lateinit var mFirebase: FirebaseHelper
     private lateinit var mCamera: Camera
@@ -18,13 +20,27 @@ class ShareActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate: ")
+        setContentView(R.layout.activity_share)
+        Log.d(TAG, "onCreate ")
+        setUpBottomNavigation()
 
         mFirebase = FirebaseHelper(this)
-        mCamera = Camera(this)
-        mCamera.takePicture()
-
         mFirebase.currentUserData { mUser = it }
+        mCamera = Camera(this)
+
+        button_post_from_camera.setOnClickListener { mCamera.takePicture() }
+        button_post_random.setOnClickListener { addRandomPosts() }
+    }
+
+    private fun addRandomPosts() {
+        mFirebase.apply {
+            val imageUrl = "https://picsum.photos/seed/picsum/1000/1000"
+            createImageIdDb(imageUrl) {
+                createPost(mkPost(imageUrl)) {
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -35,11 +51,15 @@ class ShareActivity : AppCompatActivity() {
             finish()
             return
         }
+        addPost(mCamera.imageUri!!)
+
+    }
+
+    private fun addPost(uri: Uri) {
         mFirebase.apply {
-            val uri: Uri = mCamera.imageUri!!
             storeUserImage(uri) {
                 downloadStoredUserImageUrl(uri) { imageUrl ->
-                    createImage(imageUrl) {
+                    createImageIdDb(imageUrl) {
                         createPost(mkPost(imageUrl)) {
                             finish()
                         }

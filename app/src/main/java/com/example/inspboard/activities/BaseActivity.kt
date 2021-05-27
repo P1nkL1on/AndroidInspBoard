@@ -14,6 +14,7 @@ abstract class BaseActivity(val menuItemNumber:Int) : AppCompatActivity() {
             val nextActivity =
                     when (it.itemId) {
                         R.id.nav_item_feed -> FeedActivity::class.java
+                        R.id.nav_item_share -> ShareActivity::class.java
                         R.id.nav_item_profile -> ProfileActivity::class.java
                         else -> {
                             Log.e(TAG, "unknown id item clicked $it")

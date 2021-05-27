@@ -121,7 +121,7 @@ class FirebaseHelper(private val activity: Activity) {
         )
     }
 
-    fun createImage(url: String, onSuccess: () -> Unit) {
+    fun createImageIdDb(url: String, onSuccess: () -> Unit) {
         database.child("images").child(currentUser().uid).push().setValue(url).addOnCompleteListener {
             it.showErrorOrContinue("Can't save image url in database", onSuccess)
         }

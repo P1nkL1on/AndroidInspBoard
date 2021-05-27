@@ -1,22 +1,17 @@
 package com.example.inspboard.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.inspboard.R
 import com.example.inspboard.utils.Camera
 import com.example.inspboard.utils.FirebaseHelper
+import com.example.inspboard.utils.ImagesAdapter
 import com.example.inspboard.utils.ValueEventListenerAdapter
 import kotlinx.android.synthetic.main.activity_profile.*
 
-class ProfileActivity : BaseActivity(1) {
+class ProfileActivity : BaseActivity(2) {
     private val TAG = "ProfileActivity"
     private lateinit var mCamera: Camera
     private lateinit var mFirebase: FirebaseHelper
@@ -69,25 +64,3 @@ class ProfileActivity : BaseActivity(1) {
     }
 }
 
-class ImagesAdapter(private val images: List<String>) :
-    RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
-    class ViewHolder(val image: ImageView) : RecyclerView.ViewHolder(image)
-
-    override fun getItemCount(): Int = images.size
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val image = LayoutInflater.from(parent.context).inflate(R.layout.image_item_in_profile, parent, false)
-        return ViewHolder(image as ImageView)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.image.loadImage(images[position])
-    }
-}
-
-class SquareImageView(context: Context, attrs: AttributeSet) : androidx.appcompat.widget.AppCompatImageView(context, attrs) {
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(widthMeasureSpec, widthMeasureSpec)
-    }
-}
