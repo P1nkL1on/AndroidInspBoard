@@ -16,3 +16,18 @@
 * [glide v4](https://bumptech.github.io/glide/) для всех пайплайнов с картинками
 * [BottomNavigationViewEx](https://github.com/ittianyu/BottomNavigationViewEx) для нижнего тулбара
 * [CircleImageView](https://github.com/hdodenhof/CircleImageView) для круглых ImageView
+
+## Ссылка на APK
+
+Можно скачать с [Google Disk'a](https://drive.google.com/file/d/1ms0Hud_zd0nHrbItXFoSMndbmWUQN9vG/view?usp=sharing), архив без пароля содержит `insp-board-app-debug.apk` 
+
+Исользовался [ProGuard](https://developer.android.com/studio/build/shrink-code):
+```gradle
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+```
