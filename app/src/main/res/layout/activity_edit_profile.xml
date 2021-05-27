@@ -31,68 +31,61 @@
             app:layout_constraintRight_toRightOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/image_view_avatar"
-            android:padding="20dp">
+            android:padding="20dp"
+            app:layout_constraintTop_toBottomOf="@id/image_view_avatar">
+
             <TextView
-                style="@style/profile_text_value"
                 android:id="@+id/mail_label"
-                app:layout_constraintTop_toTopOf="parent"
+                style="@style/profile_text_value"
+                android:text="mail"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="mail"/>
+                app:layout_constraintTop_toTopOf="parent" />
+
             <EditText
-                android:hint="email"
                 android:id="@+id/mail_edit"
                 style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/mail_label"
+                android:hint="email"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/mail_label" />
+
             <TextView
-                style="@style/profile_text_value"
                 android:id="@+id/name_label"
+                style="@style/profile_text_value"
                 android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/mail_edit"
+                android:text="name"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="name"/>
+                app:layout_constraintTop_toBottomOf="@id/mail_edit" />
+
             <EditText
-                android:hint="name"
                 android:id="@+id/name_edit"
                 style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                app:layout_constraintTop_toBottomOf="@id/name_label"
                 android:layout_marginBottom="10dp"
-                android:textColor="@color/white"/>
+                android:hint="name"
+                android:inputType="text"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/name_label" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+
+        <Button
+            android:id="@+id/button_ok"
+            style="@style/button_style"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="10dp">
-            <Button
-                android:id="@+id/button_back"
-                style="@style/button_style"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/revert_changes"/>
-            <Button
-                android:id="@+id/button_ok"
-                style="@style/button_style"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/save_changes"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:text="@string/save_changes"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

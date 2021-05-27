@@ -45,6 +45,7 @@ class ProfileActivity : BaseActivity(2), PostViewer {
         recycler_view_images.layoutManager = GridLayoutManager(this, 3)
         mFirebase.currentUserPosts().addValueEventListener(ValueEventListenerAdapter{ it ->
             val posts = it.children.map { it.asPost()!! }
+                .filter { it.uid == mFirebase.currentUser().uid }
                 .sortedByDescending { it.timestampDate() }
             recycler_view_images.adapter = ImagesAdapter(this, posts)
         })
@@ -61,10 +62,6 @@ class ProfileActivity : BaseActivity(2), PostViewer {
             image_view_profile.loadImageFullSize(user.photo)
         }
     }
-
-    override fun toggleLike(postId: String) {
-    }
-
     override fun mkLikeCountValueListener(postId: String, onSuccess: (PostLikes) -> Unit): ValueEventListener {
         val reference = mFirebase.database.child("likes/${postId}")
         return reference.addValueEventListener(ValueEventListenerAdapter { it ->
@@ -75,13 +72,16 @@ class ProfileActivity : BaseActivity(2), PostViewer {
         })
     }
 
-    override fun loadLikes(postId: String, position: Int) {
-    }
-
     override fun showPostDetails(post: Post, likes: PostLikes) {
         val intent = Intent(this, PostActivity::class.java)
         intent.putPostAndLikes(post, likes)
         startActivity(intent)
+    }
+
+    override fun loadLikes(postId: String, position: Int) {
+    }
+
+    override fun toggleLike(postId: String) {
     }
 
     override fun requestNext(postInd: Int, nPosts: Int, onSuccess: (List<Post>) -> Unit) {

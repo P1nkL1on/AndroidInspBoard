@@ -14,8 +14,6 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
     private lateinit var mFirebase: FirebaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // todo: make buttons in layout connected to text
-        //  edit rather than bottom because opf scrolling in keyboard mode
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
@@ -53,7 +51,7 @@ class RegisterActivity : AppCompatActivity(), EmailFragment.Listener, NamePassFr
         }
         mFirebase.createUserWithEmailAndPassword(mEmail, password) {
             val user = User(
-                name = toName(name),
+                name = name,
                 mail = mEmail
             )
             mFirebase.createUser(it.user!!.uid, user) {

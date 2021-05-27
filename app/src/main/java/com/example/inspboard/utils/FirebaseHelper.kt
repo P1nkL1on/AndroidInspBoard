@@ -50,10 +50,10 @@ class FirebaseHelper(private val activity: Activity) {
         database.child("images/${currentUser().uid}")
 
     fun currentUserPosts(): DatabaseReference =
-        database.child("posts/${currentUser().uid}")
+        database.child("posts/")
 
     fun anonPosts(): DatabaseReference =
-        database.child("posts/anon")
+        database.child("posts/")
 
     fun storeUserPhoto(uri: Uri, onSuccess: () -> Unit) {
         storageCurrentUserPhotos().putFile(uri).addOnCompleteListener {
@@ -110,13 +110,13 @@ class FirebaseHelper(private val activity: Activity) {
     }
 
     fun createPost(post: Post, onSuccess: () -> Unit) {
-        database.child("posts/${currentUser().uid}").push().setValue(post).addOnCompleteListener {
+        database.child("posts").push().setValue(post).addOnCompleteListener {
             it.showErrorOrContinue("Can't add post to database", onSuccess)
         }
     }
 
     fun createPostsAnon(posts: List<Post>, onSuccess: () -> Unit) {
-        val ref = database.child("posts/anon")
+        val ref = database.child("posts")
         var updates = emptyMap<String, Any>()
         posts.map {
             val key = ref.push().key

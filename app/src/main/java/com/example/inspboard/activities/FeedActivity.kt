@@ -53,6 +53,8 @@ class FeedActivity : BaseActivity(0), PostViewer {
             ValueEventListenerAdapter { it ->
                 val allPosts = it.children.map { it.asPost()!! }
                     .sortedByDescending { it.timestampDate() }
+                if (allPosts.isEmpty() || postInd >= allPosts.size)
+                    return@ValueEventListenerAdapter
                 val page = allPosts.subList(postInd, min(allPosts.count() - 1, postInd + nPosts))
                 Log.d(TAG, "requestNext: succ posts $postInd..${postInd + page.count()}")
                 onSuccess(page)

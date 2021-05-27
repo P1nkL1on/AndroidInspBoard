@@ -34,7 +34,6 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
         mFirebase = FirebaseHelper(this)
 
         enableButtonIfAllTextsNonEmpty(button_ok, mail_edit, name_edit)
-        button_back.setOnClickListener { finish() }
         button_ok.setOnClickListener { updateUser() }
         image_view_avatar.setOnClickListener { mCamera.takePicture() }
 
@@ -78,7 +77,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     private fun updateUser() {
         mNewUser = mOldUser.copy(
-            name = name_edit.text.toString(),
+            name = toName(name_edit.text.toString()),
             mail = mail_edit.text.toString(),
         )
         val err = isUserOk(mNewUser)
