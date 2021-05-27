@@ -2,17 +2,18 @@ package com.example.inspboard.activities
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.View
+import android.widget.*
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.example.inspboard.R
 import com.example.inspboard.models.Post
+import com.example.inspboard.models.PostLikes
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -59,3 +60,25 @@ fun DatabaseReference.setTrueOrRemove(value: Boolean) =
     if (value) setValue(true) else removeValue()
 
 fun DataSnapshot.asPost(): Post? = getValue(Post::class.java)?.copy(id = key!!)
+
+fun TextView.setLinkableText(text: String) {
+    val spannableString = SpannableString(text)
+    spannableString.setSpan(object : ClickableSpan() {
+        override fun onClick(widget: View) {
+            widget.context.showToast("Username is clicked")
+        }
+        override fun updateDrawState(ds: TextPaint) { }
+    }, 0, spannableString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+    this.text = spannableString
+    this.movementMethod = LinkMovementMethod.getInstance()
+}
+
+fun Intent.putPostAndLikes(post: Post, postLikes: PostLikes) {
+    putExtra("personalLike", postLikes.personalLike)
+    putExtra("likesCount", postLikes.likesCount)
+    putExtra("photo", post.photo)
+    putExtra("name", post.name)
+    putExtra("image", post.image)
+    putExtra("timestamp", post.timestampDate().toString())
+}

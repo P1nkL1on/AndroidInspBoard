@@ -41,10 +41,6 @@ class ProfileActivity : BaseActivity(2) {
         image_view_edit.setOnClickListener{
             val intent = Intent(this, EditProfileActivity::class.java)
             startActivity(intent)
-
-        }
-        button_add_photo.setOnClickListener {
-            startActivity(Intent(this, ShareActivity::class.java))
         }
         recycler_view_images.layoutManager = GridLayoutManager(this, 3)
         mFirebase.currentUserImages().addValueEventListener(ValueEventListenerAdapter{ it ->

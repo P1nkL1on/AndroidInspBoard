@@ -1,29 +1,18 @@
 package com.example.inspboard.utils
 
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inspboard.R
 import com.example.inspboard.activities.loadImage
-import com.example.inspboard.activities.showToast
+import com.example.inspboard.activities.setLinkableText
 import com.example.inspboard.models.Post
 import com.example.inspboard.models.PostLikes
 import kotlinx.android.synthetic.main.post_item_in_feed.view.*
 
-class FeedAdapter(private val listener:Listener, private val posts: List<Post>)
+class FeedAdapter(private val listener: PostViewer, private val posts: List<Post>)
     : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
-
-    interface Listener {
-        fun toggleLike(postId: String)
-        fun loadLikes(postId: String, position: Int)
-    }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
@@ -43,6 +32,7 @@ class FeedAdapter(private val listener:Listener, private val posts: List<Post>)
         with(holder.view) {
             image_view_avatar.loadImage(post.photo)
             image_view_image.loadImage(post.image)
+            image_view_image.setOnClickListener { listener.showPostDetails(post, likes) }
             text_view_name.setLinkableText(post.name)
             text_view_date.text = post.timestampDate().toString()
             text_view_likes.text = likes.likesCount.toString()
@@ -53,19 +43,6 @@ class FeedAdapter(private val listener:Listener, private val posts: List<Post>)
     }
 
     override fun getItemCount(): Int = posts.size
-
-    private fun TextView.setLinkableText(text: String) {
-        val spannableString = SpannableString(text)
-        spannableString.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                widget.context.showToast("Username is clicked")
-            }
-            override fun updateDrawState(ds: TextPaint) { }
-        }, 0, spannableString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        this.text = spannableString
-        this.movementMethod = LinkMovementMethod.getInstance()
-    }
 
     fun updatePostLikes(position: Int, postLikes: PostLikes) {
         mPostLikes = mPostLikes + (position to postLikes)

@@ -52,7 +52,6 @@ class ShareActivity : BaseActivity(1) {
             return
         }
         addPost(mCamera.imageUri!!)
-
     }
 
     private fun addPost(uri: Uri) {
